@@ -1,0 +1,90 @@
+.app {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.header, .footer {
+  margin-bottom: 20px;
+}
+
+.invoice-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.invoice-details div {
+  display: flex;
+  flex-direction: column;
+}
+
+.invoice-details label {
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+.invoice-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.invoice-form input {
+  padding: 5px;
+  flex: 1;
+}
+
+.invoice-form button {
+  padding: 5px 10px;
+}
+
+.generate-pdf-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.generate-pdf-button:hover {
+  background-color: #45a049;
+}
+.app {
+  padding: 20px;
+}
+
+.header-form, .invoice-form {
+  margin-bottom: 20px;
+}
+
+.header-form input, .invoice-form input {
+  margin-right: 10px;
+  padding: 5px;
+}
+
+.generate-pdf-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.generate-pdf-button:hover {
+  background-color: #45a049;
+}
