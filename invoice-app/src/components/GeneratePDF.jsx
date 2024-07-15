@@ -24,7 +24,8 @@ const GeneratePDF = ({ data, total, vat, invoiceInfo }) => {
 
     data.forEach(item => {
       const itemData = [
-        item.code,
+        item.id,
+        item.name,
         item.description,
         item.quantity,
         item.price,
