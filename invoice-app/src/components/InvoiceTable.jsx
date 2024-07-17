@@ -22,6 +22,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
 
     // Prepare table data
     const tableColumn = ["Code", "Description", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Total", "Price", "Amount", "VAT"];
+    console.log("invoices",invoices)
     const tableRows = invoices.map(invoice => [
       invoice.id,
       `${invoice.name} £ ${invoice.price}`,
@@ -35,13 +36,14 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
       calculateTotal(invoice),
       invoice.price,
       calculateTotal(invoice) * invoice.price,
-      // invoice.vat,
+      invoice.vat,
     ]);
 
     // Add table
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
+
       startY: 60,
     });
 
