@@ -2,15 +2,16 @@ import React from 'react';
 
 const Header = ({ invoiceInfo, handleInvoiceInfoChange }) => (
   <div className="header">
+    <div>
     <h1>GAGG Foods </h1>
     <p>85/87, Agbrigg Road</p>
     <p> Wakefield - WF1 5PAB</p>
     <p>Mob: 07916680050</p>
     <p>Email: mdgfoods@hotmail.com</p>
-
-    <div className="invoice-details">
+    </div>
+    <div className="invoice-form">
       <div>
-        <label>Invoice To:</label>
+        <div>Invoice To:</div>
         <input
           type="text"
           name="invoiceTo"
@@ -19,16 +20,7 @@ const Header = ({ invoiceInfo, handleInvoiceInfoChange }) => (
         />
       </div>
       <div>
-        <label>Delivery To:</label>
-        <input
-          type="text"
-          name="deliveryTo"
-          value={invoiceInfo.deliveryTo}
-          onChange={handleInvoiceInfoChange}
-        />
-      </div>
-      <div>
-        <label>Invoice Number:</label>
+        <div>Invoice Number:</div>
         <input
           type="text"
           name="invoiceNumber"
@@ -37,16 +29,7 @@ const Header = ({ invoiceInfo, handleInvoiceInfoChange }) => (
         />
       </div>
       <div>
-        <label>Customer Number:</label>
-        <input
-          type="text"
-          name="customerNumber"
-          value={invoiceInfo.customerNumber}
-          onChange={handleInvoiceInfoChange}
-        />
-      </div>
-      <div>
-        <label>Week Ending:</label>
+        <div>Week Ending:</div>
         <input
           type="text"
           name="weekEnding"
@@ -55,7 +38,7 @@ const Header = ({ invoiceInfo, handleInvoiceInfoChange }) => (
         />
       </div>
       <div>
-        <label>Invoice Date:</label>
+        <div>Invoice Date:</div>
         <input
           type="text"
           name="invoiceDate"

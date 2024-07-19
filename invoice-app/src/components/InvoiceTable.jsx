@@ -3,64 +3,68 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo, handleInvoiceInfoChange }) => {
+  const footData = []
+
   const generatePDF = () => {
     const doc = new jsPDF();
-    doc.setFontSize(12);
-    doc.text("GAGG FOODS", 14, 20);
-    doc.text("Unit 6A Millennia Park", 14, 25);
-    doc.text("Thornes Rd, Wakefield - WF2 8PW", 14, 30);
-    doc.text("Mob: 07984 143344", 14, 35);
-    doc.text("Email: mdgfoods@hotmail.com", 14, 40);
+    doc.setFontSize(10);
 
-    // Add invoice details next to company details
-    doc.text(`Invoice To: ${invoiceInfo.invoiceTo}`, 105, 20);
-    doc.text(`Delivery To: ${invoiceInfo.deliveryTo}`, 105, 25);
-    doc.text(`Invoice Number: ${invoiceInfo.invoiceNumber}`, 105, 30);
-    doc.text(`Customer Number: ${invoiceInfo.customerNumber}`, 105, 35);
-    doc.text(`Week Ending: ${invoiceInfo.weekEnding}`, 105, 40);
-    doc.text(`Invoice Date: ${invoiceInfo.invoiceDate}`, 105, 45);
+    doc.text("GAGG FOODS", 5, 5);
+    doc.text("Unit 6A Millennia Park", 65, 10);
+    doc.text("Thornes Rd, Wakefield - WF2 8PW", 5, 10);
+    doc.text("Mob: 07984 143344", 65, 15);
+    doc.text("Email: mdgfoods@hotmail.com", 5, 15);
 
-    // Prepare table data
-    const tableColumn = ["Code", "Description", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Total", "Price", "Amount", "VAT"];
-    console.log("invoices",invoices)
+    doc.text(`Invoice To: ${invoiceInfo.invoiceTo}`, 120, 5);
+    doc.text(`Invoice Number: ${invoiceInfo.invoiceNumber}`, 120, 10);
+    doc.text(`Week Ending: ${invoiceInfo.weekEnding}`, 165, 15);
+    doc.text(`Invoice Date: ${invoiceInfo.invoiceDate}`, 120, 15);
+    
+    const tableColumn = ["Description", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Total", "Price", "Amount"];
     const tableRows = invoices.map(invoice => [
-      invoice.id,
-      `${invoice.name} £ ${invoice.price}`,
-      invoice.sun,
-      invoice.mon,
-      invoice.tue,
-      invoice.wed,
-      invoice.thu,
-      invoice.fri,
-      invoice.sat,
+      invoice.description,
+      `${invoice.sun === 0 ? "" : invoice.sun}       ${invoice.sunReturn}`,
+      `${invoice.mon === 0 ? "" : invoice.mon}        ${invoice.sunReturn}  `,
+      `${invoice.tue === 0 ? "" : invoice.tue}         ${invoice.sunReturn}`,
+      `${invoice.wed === 0 ? "" : invoice.wed}         ${invoice.sunReturn}`,
+      `${invoice.thu === 0 ? "" : invoice.thu}          ${invoice.sunReturn}`,
+      `${invoice.fri === 0 ? "" : invoice.fri}     ${invoice.sunReturn}`,
+      `${invoice.sat === 0 ? "" : invoice.sat}    ${invoice.sunReturn}`,
       calculateTotal(invoice),
       invoice.price,
-      calculateTotal(invoice) * invoice.price,
-      invoice.vat,
+      (calculateTotal(invoice) * invoice.price).toFixed(2),
     ]);
 
-    // Add table
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
-
-      startY: 60,
+      theme: 'grid',
+      startY: 20,
+      startX: 5,
+      styles: { fontSize: 7 }, // Reduce font size
+      margin: { top: 20, left: 5, right: 5 }, // Adjust top margin
+      tableWidth: 'auto',
+      bodyStyles: {
+        fontSize: 7, // Adjust the font size for the body
+        // font: 'Newsreader', // Set the font family for the body
+        cellPadding: { top: 1, right: 5, bottom: 1, left: 2 }, // Adjust cell padding
+        textColor: [0, 0, 0], // Set text color for the body
+        rowPageBreak: 'avoid', // Avoid row page breaks
+      },
     });
 
-    // Add footer details
     const pageHeight = doc.internal.pageSize.height;
-    const footerStartY = pageHeight - 40; // Adjust this value as needed
-    doc.setFontSize(10);
+    const footerStartY = pageHeight - 10; // Adjust this value as needed
+    doc.setFontSize(5);
     doc.text(`Balance On Last Invoice: £150.25`, 14, footerStartY);
-    doc.text(`Payments Received This Week: £150.25`, 14, footerStartY + 5);
-    doc.text(`Net Amount: £126.44`, 14, footerStartY + 10);
-    doc.text(`VAT Amount: £0.00`, 14, footerStartY + 15);
-    doc.text(`Invoice Total: £126.44`, 14, footerStartY + 20);
-    doc.text(`Balance B/F: £0.00`, 14, footerStartY + 25);
-    doc.text(`Amount Due: £126.44`, 14, footerStartY + 30);
+    doc.text(`Payments Received This Week: £150.25`, 14, footerStartY + 3);
+    doc.text(`Net Amount: £126.44`, 14, footerStartY + 6);
+    doc.text(`VAT Amount: £0.00`, 24, footerStartY + 9);
+    doc.text(`Invoice Total: £126.44`, 24, footerStartY + 12);
+    doc.text(`Balance B/F: £0.00`, 24, footerStartY + 15);
+    doc.text(`Amount Due: £126.44`, 24, footerStartY + 18);
 
-    // Save PDF
-    doc.save("invoice.pdf");
+    doc.save(`${invoiceInfo.invoiceTo}${invoiceInfo.invoiceDate}.pdf`);
   };
 
   const calculateTotal = (invoice) => {
@@ -76,13 +80,14 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
   };
 
   const calculateTotalPerDayInWeek = (day) => {
-    let result=0
+    let result = 0
     for (let i = 0; i < invoices.length; i++) {
-      result +=parseInt(invoices[i][day])
+      result += parseInt(invoices[i][day])
     };
+    footData.push(result)
     return result
 
-  }
+  };
 
   return (
     <div>
@@ -90,7 +95,6 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
       <table>
         <thead>
           <tr>
-            <th>Code</th>
             <th>Description</th>
             <th>Sun</th>
             <th>Mon</th>
@@ -102,24 +106,22 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
             <th>Total</th>
             <th>Price</th>
             <th>Amount</th>
-            {/* <th>VAT</th> */}
           </tr>
         </thead>
         <tbody>
           {invoices.map((invoice, index) => (
             <tr key={index} onClick={() => handleModal(invoice.id)}>
-              <td>{invoice.id}</td>
-              <td>{invoice.name} £ {invoice.price}</td>
-              <td>{invoice.sun}</td>
-              <td>{invoice.mon}</td>
-              <td>{invoice.tue}</td>
-              <td>{invoice.wed}</td>
-              <td>{invoice.thu}</td>
-              <td>{invoice.fri}</td>
-              <td>{invoice.sat}</td>
+              <td>{invoice.description}</td>
+              <td><span>{invoice.sun === 0 ? "" : invoice.sun} </span> <span style={{ float: "right" }}>{invoice.sunReturn ?? ""}</span></td>
+              <td><span>{invoice.mon === 0 ? "" : invoice.mon}</span><span style={{ float: "right" }}>{invoice.monReturn ?? ""}</span></td>
+              <td><span>{invoice.tue === 0 ? "" : invoice.tue}</span> <span style={{ float: "right" }}>{invoice.tueReturn ?? ""}</span></td>
+              <td><span>{invoice.wed === 0 ? "" : invoice.wed}</span> <span style={{ float: "right" }}>{invoice.wedReturn ?? ""}</span></td>
+              <td><span>{invoice.thu === 0 ? "" : invoice.thu}</span>  <span style={{ float: "right" }}>{invoice.thuReturn ?? ""}</span></td>
+              <td><span>{invoice.fri === 0 ? "" : invoice.fri}</span> <span style={{ float: "right" }}>{invoice.friReturn ?? ""}</span></td>
+              <td><span>{invoice.sat === 0 ? "" : invoice.sat}</span> <span style={{ float: "right" }}>{invoice.satReturn ?? ""}</span></td>
               <td>{calculateTotal(invoice)}</td>
               <td>£ {invoice.price}</td>
-              <td>{calculateTotal(invoice) * invoice.price}</td>
+              <td>{(calculateTotal(invoice) * invoice.price).toFixed(2)}</td>
               {/* <td>{invoice.vat}</td> */}
             </tr>
           ))}
@@ -127,7 +129,6 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
         <tfoot>
           <tr>
             <td>Total</td>
-            <td></td>
             <td>{calculateTotalPerDayInWeek("sun")}</td>
             <td>{calculateTotalPerDayInWeek("mon")}</td>
             <td>{calculateTotalPerDayInWeek("tue")}</td>

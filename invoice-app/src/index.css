@@ -13,11 +13,11 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-  a {
+  /* a {
     font-weight: 500;
     color: #ebebeb;
     text-decoration: inherit;
-  }
+  } */
   /* a:hover {
     color: #535bf2;
   } */
@@ -38,16 +38,15 @@
   button {
     border-radius: 8px;
     border: 1px solid transparent;
+    color: #ffffff;
     padding: 0.6em 1.2em;
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: #1a1a1a;
+    background-color: #6e9e68;
     cursor: pointer;
+    outline: none;
     transition: border-color 0.25s;
-  }
-  button:hover {
-    border-color: #646cff;
   }
   button:focus,
   button:focus-visible {
@@ -58,12 +57,6 @@
     :root {
       color: #213547;
       background-color: #ffffff;
-    }
-    a:hover {
-      color: #0d0d0f;
-    }
-    button {
-      background-color: #6e9e68;
     }
   }
   

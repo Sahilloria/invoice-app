@@ -34,9 +34,7 @@ const Return = () => {
     const data = location.state.selectedItems;
     const [invoiceInfo, setInvoiceInfo] = useState({
         invoiceTo: '',
-        deliveryTo: '',
         invoiceNumber: '',
-        customerNumber: '',
         weekEnding: '',
         invoiceDate: '',
     });

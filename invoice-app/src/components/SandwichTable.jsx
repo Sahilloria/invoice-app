@@ -37,6 +37,11 @@ const Th = styled.th`
 const Td = styled.td`
   padding: 10px;
   border: 1px solid #ddd;
+
+  .button{
+  color:white,
+  background-color: red;
+  }
 `;
 
 const PaginationContainer = styled.div`
@@ -60,12 +65,12 @@ const PaginationContainer = styled.div`
     border-radius: 4px;
     cursor: pointer;
     text-decoration: none;
-    // color: #007bff;
+    
   }
 
-  .pagination li a.active {
-    background-color: red;
-    color: white;
+  .pagination li.active a {
+    background-color: red !important;
+    color: white !important;
   }
 `;
 
@@ -114,7 +119,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems }) => {
     <TableContainer>
       <SearchBar
         type="text"
-        placeholder="Search Sandwiches"
+        placeholder="Search Items"
         value={searchTerm}
         onChange={handleSearch}
       />
@@ -135,11 +140,11 @@ const SandwichTable = ({ selectedItems, setSelectedItems }) => {
               <tr key={sandwich.id}>
                 <Td>{sandwich.name}</Td>
                 <Td>£ {sandwich.price}</Td>
-                <Td>{sandwich.description} £ {sandwich.price}</Td>
+                <Td>{sandwich.description}</Td>
                
                 <Td>
                  { isSelected?
-                 <button onClick={() => handleRemoveItem(sandwich)}>Remove Item</button>
+                 <button onClick={() => handleRemoveItem(sandwich)} style={{background:"red"}}>Remove Item</button>
                  :
                   <button onClick={() => handleSelectItem(sandwich)}>Select Item</button>}
                 </Td>
@@ -151,6 +156,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems }) => {
       </Table>
       <PaginationContainer>
         <ReactPaginate
+  
           previousLabel={'previous'}
           nextLabel={'next'}
           breakLabel={'...'}
