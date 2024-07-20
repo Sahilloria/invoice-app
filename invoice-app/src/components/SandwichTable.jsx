@@ -69,7 +69,7 @@ const PaginationContainer = styled.div`
   }
 
   .pagination li.active a {
-    background-color: red !important;
+    background-color: #6e9e68 !important;
     color: white !important;
   }
 `;
@@ -97,7 +97,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems }) => {
   const handleSelectItem = (item) => {
     const alreadySelected = selectedItems.find((selectedItem) => selectedItem.id === item.id);
     if (!alreadySelected) {
-      setSelectedItems([...selectedItems, { ...item, quantity: 1, returnPrice: 0, sun:0, mon:0, tue:0, wed:0, thu:0,fri:0,sat:0, }]);
+      setSelectedItems([...selectedItems, { ...item, sun:0, mon:0, tue:0, wed:0, thu:0,fri:0,sat:0, }]);
     }
   };
   const handleRemoveItem = (item) => {

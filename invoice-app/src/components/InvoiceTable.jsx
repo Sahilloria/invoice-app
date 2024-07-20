@@ -19,25 +19,26 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     doc.text(`Invoice Number: ${invoiceInfo.invoiceNumber}`, 120, 10);
     doc.text(`Week Ending: ${invoiceInfo.weekEnding}`, 165, 15);
     doc.text(`Invoice Date: ${invoiceInfo.invoiceDate}`, 120, 15);
-    
     const tableColumn = ["Description", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Total", "Price", "Amount"];
+    const tableFoot= ["Total",`${footData[0]}   ${footData[1]}`, `${footData[2]}   ${footData[3]}`,`${footData[4]}   ${footData[5]}`,`${footData[6]}   ${footData[7]}`,`${footData[8]}   ${footData[9]}`,`${footData[10]}   ${footData[11]}`,`${footData[12]}   ${footData[13]}`,`${totalDeliver}  ${totalReturn}`,"",`${totalAmount}`]
     const tableRows = invoices.map(invoice => [
       invoice.description,
-      `${invoice.sun === 0 ? "" : invoice.sun}       ${invoice.sunReturn ??""}`,
-      `${invoice.mon === 0 ? "" : invoice.mon}        ${invoice.sunReturn ??""}  `,
-      `${invoice.tue === 0 ? "" : invoice.tue}         ${invoice.sunReturn ??""}`,
-      `${invoice.wed === 0 ? "" : invoice.wed}         ${invoice.sunReturn ??""}`,
-      `${invoice.thu === 0 ? "" : invoice.thu}          ${invoice.sunReturn ??""}`,
-      `${invoice.fri === 0 ? "" : invoice.fri}     ${invoice.sunReturn ??""}`,
-      `${invoice.sat === 0 ? "" : invoice.sat}    ${invoice.sunReturn ??""}`,
+      `${invoice.sun === 0 ? "" : invoice.sun}       ${invoice.sunReturn ?? ""}`,
+      `${invoice.mon === 0 ? "" : invoice.mon}        ${invoice.monReturn ?? ""}  `,
+      `${invoice.tue === 0 ? "" : invoice.tue}         ${invoice.tueReturn ?? ""}`,
+      `${invoice.wed === 0 ? "" : invoice.wed}         ${invoice.wedReturn ?? ""}`,
+      `${invoice.thu === 0 ? "" : invoice.thu}          ${invoice.thuReturn ?? ""}`,
+      `${invoice.fri === 0 ? "" : invoice.fri}     ${invoice.friReturn ?? ""}`,
+      `${invoice.sat === 0 ? "" : invoice.sat}    ${invoice.satReturn ?? ""}`,
       calculateTotal(invoice),
       invoice.price,
-      (calculateTotal(invoice) * invoice.price).toFixed(2),
+      (calculateAmount(invoice)),
     ]);
 
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
+      foot:[tableFoot],
       theme: 'grid',
       startY: 20,
       startX: 5,
@@ -55,38 +56,67 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
 
     const pageHeight = doc.internal.pageSize.height;
     const footerStartY = pageHeight - 10; // Adjust this value as needed
-    doc.setFontSize(5);
-    doc.text(`Balance On Last Invoice: £150.25`, 14, footerStartY);
-    doc.text(`Payments Received This Week: £150.25`, 14, footerStartY + 3);
-    doc.text(`Net Amount: £126.44`, 14, footerStartY + 6);
-    doc.text(`VAT Amount: £0.00`, 24, footerStartY + 9);
-    doc.text(`Invoice Total: £126.44`, 24, footerStartY + 12);
-    doc.text(`Balance B/F: £0.00`, 24, footerStartY + 15);
-    doc.text(`Amount Due: £126.44`, 24, footerStartY + 18);
+    doc.setFontSize(8);
+    doc.text(`Net Amount: ${totalAmount.toFixed(2)}`, 5, footerStartY +1);
+    doc.text(`VAT Amount: £0.00`, 40, footerStartY + 1);
+    doc.text(`Invoice Total: ${totalAmount.toFixed(2)}`, 80, footerStartY + 1);
+    doc.text(`Balance B/F: £0.00`, 125, footerStartY + 1);
+    doc.text(`Amount Due: ${totalAmount.toFixed(2)}`, 160, footerStartY + 1);
 
     doc.save(`${invoiceInfo.invoiceTo}${invoiceInfo.invoiceDate}.pdf`);
   };
 
+  let totalDeliver =0;
+  let totalReturn=0;
+  let totalAmount=0;
   const calculateTotal = (invoice) => {
+    totalReturn+=( parseInt(invoice?.sunReturn ?? 0)+
+    parseInt(invoice?.monReturn ?? 0)+
+    parseInt(invoice?.tueReturn ?? 0) +
+    parseInt(invoice?.wedReturn ?? 0)+
+    parseInt(invoice?.thuReturn ?? 0)+
+    parseInt(invoice?.friReturn ?? 0)+
+    parseInt(invoice?.satReturn ?? 0) )
+   totalDeliver+=(parseInt(invoice.sun) + parseInt(invoice?.sunReturn ?? 0) +
+    parseInt(invoice.mon) + parseInt(invoice?.monReturn ?? 0) +
+    parseInt(invoice.tue) + parseInt(invoice?.tueReturn ?? 0) +
+    parseInt(invoice.wed) + parseInt(invoice?.wedReturn ?? 0) +
+    parseInt(invoice.thu) + parseInt(invoice?.thuReturn ?? 0) +
+    parseInt(invoice.fri) + parseInt(invoice?.friReturn ?? 0) +
+    parseInt(invoice.sat) + parseInt(invoice?.satReturn ?? 0))
     return (
-      parseInt(invoice.sun) +
-      parseInt(invoice.mon) +
-      parseInt(invoice.tue) +
-      parseInt(invoice.wed) +
-      parseInt(invoice.thu) +
-      parseInt(invoice.fri) +
-      parseInt(invoice.sat)
+      parseInt(invoice.sun) + parseInt(invoice?.sunReturn ?? 0) +
+      parseInt(invoice.mon) + parseInt(invoice?.monReturn ?? 0) +
+      parseInt(invoice.tue) + parseInt(invoice?.tueReturn ?? 0) +
+      parseInt(invoice.wed) + parseInt(invoice?.wedReturn ?? 0) +
+      parseInt(invoice.thu) + parseInt(invoice?.thuReturn ?? 0) +
+      parseInt(invoice.fri) + parseInt(invoice?.friReturn ?? 0) +
+      parseInt(invoice.sat) + parseInt(invoice?.satReturn ?? 0)
     );
   };
 
-  const calculateTotalPerDayInWeek = (day) => {
-    let result = 0
+  const calculateTotalPerDayInWeek = (day, ret) => {
+    let result = 0;
+
     for (let i = 0; i < invoices.length; i++) {
-      result += parseInt(invoices[i][day])
+      result += isNaN(parseInt(invoices[i][day])) ? 0 : parseInt(invoices[i][day])
+     
     };
     footData.push(result)
     return result
 
+  };
+  
+  const calculateAmount= (invoice) =>{
+  const total= ( parseInt(invoice.sun) + parseInt(invoice?.sunReturn ?? 0) +
+    parseInt(invoice.mon) + parseInt(invoice?.monReturn ?? 0) +
+    parseInt(invoice.tue) + parseInt(invoice?.tueReturn ?? 0) +
+    parseInt(invoice.wed) + parseInt(invoice?.wedReturn ?? 0) +
+    parseInt(invoice.thu) + parseInt(invoice?.thuReturn ?? 0) +
+    parseInt(invoice.fri) + parseInt(invoice?.friReturn ?? 0) +
+    parseInt(invoice.sat) + parseInt(invoice?.satReturn ?? 0));
+    totalAmount+= parseInt(total)* invoice.price
+    return total*invoice.price
   };
 
   return (
@@ -121,7 +151,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
               <td><span>{invoice.sat === 0 ? "" : invoice.sat}</span> <span style={{ float: "right" }}>{invoice.satReturn ?? ""}</span></td>
               <td>{calculateTotal(invoice)}</td>
               <td>£ {invoice.price}</td>
-              <td>{(calculateTotal(invoice) * invoice.price).toFixed(2)}</td>
+              <td>£ {(calculateAmount(invoice))}</td>
               {/* <td>{invoice.vat}</td> */}
             </tr>
           ))}
@@ -129,13 +159,43 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
         <tfoot>
           <tr>
             <td>Total</td>
-            <td>{calculateTotalPerDayInWeek("sun")}</td>
-            <td>{calculateTotalPerDayInWeek("mon")}</td>
-            <td>{calculateTotalPerDayInWeek("tue")}</td>
-            <td>{calculateTotalPerDayInWeek("wed")}</td>
-            <td>{calculateTotalPerDayInWeek("thu")}</td>
-            <td>{calculateTotalPerDayInWeek("fri")}</td>
-            <td>{calculateTotalPerDayInWeek("sat")}</td>
+            <td>
+              <span>{calculateTotalPerDayInWeek("sun")}</span>
+              <span style={{ float: "right" }}>{calculateTotalPerDayInWeek("sunReturn")}</span>
+            </td>
+            <td>
+              <span> {calculateTotalPerDayInWeek("mon")}</span>
+              <span style={{ float: "right" }}> {calculateTotalPerDayInWeek( "monReturn")}</span>
+            </td>
+            <td>
+              <span>{calculateTotalPerDayInWeek("tue")}</span>
+              <span style={{ float: "right" }}>{calculateTotalPerDayInWeek("tueReturn")}</span>
+              </td>
+            <td>
+              <span>{calculateTotalPerDayInWeek("wed")}</span>
+              <span style={{ float: "right" }}>{calculateTotalPerDayInWeek("wedReturn")}</span>
+            </td>
+            <td>
+              <span>{calculateTotalPerDayInWeek("thu")}</span>
+              <span style={{ float: "right" }}>{calculateTotalPerDayInWeek("thuReturn")}</span>
+            </td>
+            <td>
+              <span>{calculateTotalPerDayInWeek("fri")}</span>
+              <span style={{ float: "right" }}>{calculateTotalPerDayInWeek( "friReturn")}</span>
+              </td>
+            <td>
+              <span>{calculateTotalPerDayInWeek("sat")}</span>
+              <span style={{ float: "right" }}>{calculateTotalPerDayInWeek("satReturn")}</span>
+            </td>
+            <td>
+              <span>{totalDeliver}</span>
+              <span style={{ float: "right" }}>{totalReturn}</span>
+            </td>
+            <td>
+            </td>
+            <td>
+              <span>£ {totalAmount}</span>
+            </td>
           </tr>
         </tfoot>
       </table>
