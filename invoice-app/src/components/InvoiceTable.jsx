@@ -54,8 +54,8 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
       },
     });
 
-    // const pageHeight = doc.internal.pageSize.height;
-    // const footerStartY = pageHeight - 10; // Adjust this value as needed
+    const pageHeight = doc.internal.pageSize.height;
+    const footerStartY = pageHeight - 10; // Adjust this value as needed
     doc.setFontSize(8);
     // doc.text(`Net Amount: ${totalAmount.toFixed(2)}`, 5, footerStartY +1);
     // doc.text(`VAT Amount: £0.00`, 40, footerStartY + 1);
