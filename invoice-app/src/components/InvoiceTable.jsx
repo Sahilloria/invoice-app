@@ -20,7 +20,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     doc.text(`Week Ending: ${invoiceInfo.weekEnding}`, 165, 15);
     doc.text(`Invoice Date: ${invoiceInfo.invoiceDate}`, 120, 15);
     const tableColumn = ["Description", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Total", "Price", "Amount"];
-    const tableFoot= ["Total",`${footData[0]}   ${footData[1]}`, `${footData[2]}   ${footData[3]}`,`${footData[4]}   ${footData[5]}`,`${footData[6]}   ${footData[7]}`,`${footData[8]}   ${footData[9]}`,`${footData[10]}   ${footData[11]}`,`${footData[12]}   ${footData[13]}`,`${totalDeliver}  ${totalReturn}`,"",`${totalAmount}`]
+    const tableFoot= ["Total",`${footData[0]}   ${footData[1]}`, `${footData[2]}   ${footData[3]}`,`${footData[4]}   ${footData[5]}`,`${footData[6]}   ${footData[7]}`,`${footData[8]}   ${footData[9]}`,`${footData[10]}   ${footData[11]}`,`${footData[12]}   ${footData[13]}`,`${totalDeliver}  ${totalReturn}`,"",`${totalAmount.toFixed(2)}`]
     const tableRows = invoices.map(invoice => [
       invoice.description,
       `${invoice.sun === 0 ? "" : invoice.sun}       ${invoice.sunReturn ?? ""}`,
@@ -32,7 +32,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
       `${invoice.sat === 0 ? "" : invoice.sat}    ${invoice.satReturn ?? ""}`,
       calculateTotal(invoice),
       invoice.price,
-      (calculateAmount(invoice)),
+      (calculateAmount(invoice)).toFixed(2),
     ]);
 
     doc.autoTable({
