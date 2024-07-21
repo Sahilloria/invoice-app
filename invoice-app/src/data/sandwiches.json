@@ -43,6 +43,7 @@
     {"id": 53, "description": "CAKE 2.29", "name": "CAKE", "price": 1.72},
     {"id": 54, "description": "CAKE 2.49", "name": "CAKE", "price": 1.87},
     {"id": 55, "description": "CAKE 2.69", "name": "CAKE", "price": 2.02},
+    {"id": 64, "description": "CAKE 2.79", "name": "CAKE", "price": 2.10},
     {"id": 56, "description": "CAKE 2.99", "name": "CAKE", "price": 2.24},
     {"id": 57, "description": "FLAP JACK", "name": "FLAP JACK", "price": 20.00},
     {"id": 58, "description": "COOKIES 1.00", "name": "COOKIES", "price": 0.75},
