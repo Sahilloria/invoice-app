@@ -57,11 +57,11 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     const pageHeight = doc.internal.pageSize.height;
     const footerStartY = pageHeight - 10; // Adjust this value as needed
     doc.setFontSize(8);
-    doc.text(`Net Amount: ${totalAmount.toFixed(2)}`, 5, footerStartY +1);
-    doc.text(`VAT Amount: £0.00`, 40, footerStartY + 1);
-    doc.text(`Invoice Total: ${totalAmount.toFixed(2)}`, 80, footerStartY + 1);
-    doc.text(`Balance B/F: £0.00`, 125, footerStartY + 1);
-    doc.text(`Amount Due: ${totalAmount.toFixed(2)}`, 160, footerStartY + 1);
+    // doc.text(`Net Amount: ${totalAmount.toFixed(2)}`, 5, footerStartY +1);
+    // doc.text(`VAT Amount: £0.00`, 40, footerStartY + 1);
+    // doc.text(`Invoice Total: ${totalAmount.toFixed(2)}`, 80, footerStartY + 1);
+    // doc.text(`Balance B/F: £0.00`, 125, footerStartY + 1);
+    // doc.text(`Amount Due: ${totalAmount.toFixed(2)}`, 160, footerStartY + 1);
 
     doc.save(`${invoiceInfo.invoiceTo}${invoiceInfo.invoiceDate}.pdf`);
   };
@@ -115,10 +115,11 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     parseInt(invoice.thu) + parseInt(invoice?.thuReturn ?? 0) +
     parseInt(invoice.fri) + parseInt(invoice?.friReturn ?? 0) +
     parseInt(invoice.sat) + parseInt(invoice?.satReturn ?? 0));
-    totalAmount+= parseInt(total)* invoice.price
+    totalAmount+= total* invoice.price
     return total*invoice.price
   };
 
+  
   return (
     <div>
       <button onClick={generatePDF} className="generate-pdf-button">Generate PDF</button>
@@ -151,7 +152,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
               <td><span>{invoice.sat === 0 ? "" : invoice.sat}</span> <span style={{ float: "right" }}>{invoice.satReturn ?? ""}</span></td>
               <td>{calculateTotal(invoice)}</td>
               <td>£ {invoice.price}</td>
-              <td>£ {(calculateAmount(invoice))}</td>
+              <td>£ {(calculateAmount(invoice)).toFixed(2)}</td>
               {/* <td>{invoice.vat}</td> */}
             </tr>
           ))}
