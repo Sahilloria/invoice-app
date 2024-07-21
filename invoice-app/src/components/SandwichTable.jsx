@@ -79,7 +79,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
 
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = sandwichesData.length;
 
   useEffect(() => {
     setSandwiches(sandwichesData);
