@@ -7,7 +7,7 @@ const Header = ({ invoiceInfo, handleInvoiceInfoChange }) => (
     <p>85/87, Agbrigg Road</p>
     <p> Wakefield - WF1 5PAB</p>
     <p>Mob: 07916680050</p>
-    <p>Email: mdgfoods@hotmail.com</p>
+    <p>Email: sanjeevkumarpandit1979@gmail.com</p>
     </div>
     <div className="invoice-form">
       <div>

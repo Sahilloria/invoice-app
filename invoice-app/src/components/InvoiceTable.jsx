@@ -10,10 +10,10 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     doc.setFontSize(10);
 
     doc.text("GAGG FOODS", 5, 5);
-    doc.text("Unit 6A Millennia Park", 65, 10);
-    doc.text("Thornes Rd, Wakefield - WF2 8PW", 5, 10);
-    doc.text("Mob: 07984 143344", 65, 15);
-    doc.text("Email: mdgfoods@hotmail.com", 5, 15);
+    doc.text("85/87, Agbrigg Road", 65, 10);
+    doc.text("Wakefield - WF1 5PAB", 5, 10);
+    doc.text("Mob: 07916680050", 65, 15);
+    doc.text("Email: sanjeevkumarpandit1979@gmail.com", 5, 15);
 
     doc.text(`Invoice To: ${invoiceInfo.invoiceTo}`, 120, 5);
     doc.text(`Invoice Number: ${invoiceInfo.invoiceNumber}`, 120, 10);
@@ -194,7 +194,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
             <td>
             </td>
             <td>
-              <span>£ {totalAmount}</span>
+              <span>£ {totalAmount.toFixed(2)}</span>
             </td>
           </tr>
         </tfoot>
