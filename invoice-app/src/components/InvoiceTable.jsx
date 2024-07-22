@@ -61,11 +61,11 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
 
     const footerStartY = pageHeight - 10;
     doc.setFontSize(8);
-    doc.text(`Net Amount: ${(totalAmount).toFixed(2)}`, 5, footerStartY +1);
+    doc.text(`Net Amount: ${(totalAmount/2).toFixed(2)}`, 5, footerStartY +1);
     doc.text(`VAT Amount: £0.00`, 40, footerStartY + 1);
-    doc.text(`Invoice Total: ${(totalAmount).toFixed(2)}`, 80, footerStartY + 1);
+    doc.text(`Invoice Total: ${(totalAmount/2).toFixed(2)}`, 80, footerStartY + 1);
     doc.text(`Balance B/F: £0.00`, 125, footerStartY + 1);
-    doc.text(`Amount Due: ${(totalAmount).toFixed(2)}`, 160, footerStartY + 1);
+    doc.text(`Amount Due: ${(totalAmount/2).toFixed(2)}`, 160, footerStartY + 1);
 
     doc.save(`${invoiceInfo.invoiceTo}${invoiceInfo.invoiceDate}.pdf`);
   };
