@@ -45,71 +45,71 @@ const AddInvoiceForm = ({ addInvoice, isModal, handleModal, formData, setFormDat
         <form onSubmit={handleSubmit} className="form-grid">
           <div className="form-group">
             <label htmlFor="sun">Sun</label>
-            <input type="number" name="sun" id="sun" min={0} value={formData.sun} onChange={handleChange} placeholder="Sun"  />
+            <input type="number" name="sun"defaultValue={0} id="sun" min={0} value={formData.sun} onChange={handleChange} placeholder="Sun"  />
           </div>
           <div className="form-group">
             <label htmlFor="sunReturn">Sun Return</label>
-            <input type="number" name="sunReturn" id="sunReturn" max={0} value={formData.sunReturn} onChange={handleChange} placeholder="Sun Return"  />
+            <input type="number" name="sunReturn"defaultValue={0} id="sunReturn" max={0} value={formData.sunReturn} onChange={handleChange} placeholder="Sun Return"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="mon">Mon</label>
-            <input type="number" name="mon" id="mon" min={0}  value={formData.mon} onChange={handleChange} placeholder="Mon"  />
+            <input type="number" name="mon" id="mon" min={0} defaultValue={0} value={formData.mon} onChange={handleChange} placeholder="Mon"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="mon">Mon Return</label>
-            <input type="number" name="monReturn" id="monReturn" max={0} value={formData.monReturn} onChange={handleChange} placeholder="Mon Return"  />
+            <input type="number" name="monReturn" id="monReturn"defaultValue={0} max={0} value={formData.monReturn} onChange={handleChange} placeholder="Mon Return"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="tue">Tue</label>
-            <input type="number" name="tue" id="tue" min={0}  value={formData.tue} onChange={handleChange} placeholder="Tue"  />
+            <input type="number" name="tue" id="tue" min={0} defaultValue={0}  value={formData.tue} onChange={handleChange} placeholder="Tue"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="tue">Tue Return</label>
-            <input type="number" name="tueReturn" id="tueReturn" max={0} value={formData.tueReturn} onChange={handleChange} placeholder="Tue Return"  />
+            <input type="number" name="tueReturn" id="tueReturn" defaultValue={0} max={0} value={formData.tueReturn} onChange={handleChange} placeholder="Tue Return"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="wed">Wed</label>
-            <input type="number" name="wed" id="wed" min={0}  value={formData.wed} onChange={handleChange} placeholder="Wed"  />
+            <input type="number" name="wed" id="wed" min={0} defaultValue={0}  value={formData.wed} onChange={handleChange} placeholder="Wed"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="wedReturn">Wed Return</label>
-            <input type="number" name="wedReturn" id="wedReturn" max={0} value={formData.wedReturn} onChange={handleChange} placeholder="Wed Return"  />
+            <input type="number" name="wedReturn" id="wedReturn" defaultValue={0} max={0} value={formData.wedReturn} onChange={handleChange} placeholder="Wed Return"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="thu">Thu</label>
-            <input type="number" name="thu" id="thu" min={0} value={formData.thu} onChange={handleChange} placeholder="Thu"  />
+            <input type="number" name="thu" id="thu" min={0} defaultValue={0} value={formData.thu} onChange={handleChange} placeholder="Thu"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="thuReturn">Thu Return</label>
-            <input type="number" name="thuReturn" id="thuReturn" max={0} value={formData.thuReturn} onChange={handleChange} placeholder="Thu Return"  />
+            <input type="number" name="thuReturn" id="thuReturn" defaultValue={0} max={0} value={formData.thuReturn} onChange={handleChange} placeholder="Thu Return"  />
           </div>
 
 
           <div className="form-group">
             <label htmlFor="fri">Fri</label>
-            <input type="number" name="fri" id="fri" min={0}  value={formData.fri} onChange={handleChange} placeholder="Fri"  />
+            <input type="number" name="fri" id="fri" min={0} defaultValue={0}  value={formData.fri} onChange={handleChange} placeholder="Fri"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="friReturn">Fri</label>
-            <input type="number" name="friReturn" id="friReturn" max={0} value={formData.friReturn} onChange={handleChange} placeholder="Fri Return"  />
+            <input type="number" name="friReturn" id="friReturn" defaultValue={0} max={0} value={formData.friReturn} onChange={handleChange} placeholder="Fri Return"  />
           </div>
 
           <div className="form-group">
             <label htmlFor="sat">Sat</label>
-            <input type="number" name="sat" id="sat" min={0}  value={formData.sat} onChange={handleChange} placeholder="Sat"  />
+            <input type="number" name="sat" id="sat" min={0} defaultValue={0} value={formData.sat} onChange={handleChange} placeholder="Sat"  />
           </div>
           <div className="form-group">
             <label htmlFor="satReturn">Sat</label>
-            <input type="number" name="satReturn" id="satReturn" max={0} value={formData.satReturn} onChange={handleChange} placeholder="Sat Return"  />
+            <input type="number" name="satReturn" id="satReturn" defaultValue={0} max={0} value={formData.satReturn} onChange={handleChange} placeholder="Sat Return"  />
           </div>
 
           <div className="form-group full-width">

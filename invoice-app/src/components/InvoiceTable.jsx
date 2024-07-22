@@ -4,7 +4,9 @@ import 'jspdf-autotable';
 
 const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo, handleInvoiceInfoChange }) => {
   const footData = []
-
+  let totalDeliver =0;
+  let totalReturn=0;
+  let totalAmount=0;
   const generatePDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(10);
@@ -20,7 +22,8 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     doc.text(`Week Ending: ${invoiceInfo.weekEnding}`, 165, 15);
     doc.text(`Invoice Date: ${invoiceInfo.invoiceDate}`, 120, 15);
     const tableColumn = ["Description", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Total", "Price", "Amount"];
-    const tableFoot= ["Total",`${footData[0]}   ${footData[1]}`, `${footData[2]}   ${footData[3]}`,`${footData[4]}   ${footData[5]}`,`${footData[6]}   ${footData[7]}`,`${footData[8]}   ${footData[9]}`,`${footData[10]}   ${footData[11]}`,`${footData[12]}   ${footData[13]}`,`${totalDeliver}  ${totalReturn}`,"",`${totalAmount.toFixed(2)}`]
+    const tableFoot= ["Total",`${footData[0]}   ${footData[1]}`, `${footData[2]}   ${footData[3]}`,`${footData[4]}   ${footData[5]}`,`${footData[6]}   ${footData[7]}`,`${footData[8]}   ${footData[9]}`,`${footData[10]}   ${footData[11]}`,`${footData[12]}   ${footData[13]}`,`${totalDeliver}  ${totalReturn}`,"",`${totalAmount.toFixed(2)}`];
+    console.log("TOTAL AMOUT", totalAmount)
     const tableRows = invoices.map(invoice => [
       invoice.description,
       `${invoice.sun === 0 ? "" : invoice.sun}       ${invoice.sunReturn ?? ""}`,
@@ -46,7 +49,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
       margin: { top: 20, left: 5, right: 5 }, // Adjust top margin
       tableWidth: 'auto',
       bodyStyles: {
-        fontSize: 7, // Adjust the font size for the body
+        fontSize: 6, // Adjust the font size for the body
         // font: 'Newsreader', // Set the font family for the body
         cellPadding: { top: 1, right: 5, bottom: 1, left: 2 }, // Adjust cell padding
         textColor: [0, 0, 0], // Set text color for the body
@@ -55,20 +58,22 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     });
 
     const pageHeight = doc.internal.pageSize.height;
-    const footerStartY = pageHeight - 10; // Adjust this value as needed
+
+    const footerStartY = pageHeight - 10;
+    console.log("totalAmout in Error:", totalAmount) // Adjust this value as needed
     doc.setFontSize(8);
-    // doc.text(`Net Amount: ${totalAmount.toFixed(2)}`, 5, footerStartY +1);
-    // doc.text(`VAT Amount: £0.00`, 40, footerStartY + 1);
-    // doc.text(`Invoice Total: ${totalAmount.toFixed(2)}`, 80, footerStartY + 1);
-    // doc.text(`Balance B/F: £0.00`, 125, footerStartY + 1);
-    // doc.text(`Amount Due: ${totalAmount.toFixed(2)}`, 160, footerStartY + 1);
+    doc.text(`Net Amount: ${(totalAmount).toFixed(2)}`, 5, footerStartY +1);
+    doc.text(`VAT Amount: £0.00`, 40, footerStartY + 1);
+    doc.text(`Invoice Total: ${(totalAmount).toFixed(2)}`, 80, footerStartY + 1);
+    doc.text(`Balance B/F: £0.00`, 125, footerStartY + 1);
+    doc.text(`Amount Due: ${(totalAmount).toFixed(2)}`, 160, footerStartY + 1);
 
     doc.save(`${invoiceInfo.invoiceTo}${invoiceInfo.invoiceDate}.pdf`);
   };
 
-  let totalDeliver =0;
-  let totalReturn=0;
-  let totalAmount=0;
+  // let totalDeliver =0;
+  // let totalReturn=0;
+  // let totalAmount=0;
   const calculateTotal = (invoice) => {
     totalReturn+=( parseInt(invoice?.sunReturn ?? 0)+
     parseInt(invoice?.monReturn ?? 0)+
