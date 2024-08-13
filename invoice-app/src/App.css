@@ -114,6 +114,15 @@ tr:hover{
   justify-content: center;
   z-index: 1000;
 }
+.form-section{
+  padding: 16px 32px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 15px;
+   
+}
 
 /* Modal Content */
 .modal-content {
@@ -147,7 +156,7 @@ tr:hover{
   margin-bottom: 5px;
 }
 
-.modal-content input {
+.modal-content input, .form-input {
   padding: 6px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -163,7 +172,14 @@ tr:hover{
   border-radius: 4px;
   cursor: pointer;
 }
-
+.form-container{
+  background: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    position: relative;
+}
 .modal-content button:hover {
   background-color: #45a049;
 }

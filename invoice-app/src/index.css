@@ -48,9 +48,11 @@
     outline: none;
     transition: border-color 0.25s;
   }
-  button:focus,
+  button:focus, button:hover,
   button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+    box-sizing: border-box;
+    background-color: #298a1c;
+    box-shadow: 2px 2px 27px 2px #cfcfcf;
   }
   
   @media (prefers-color-scheme: light) {

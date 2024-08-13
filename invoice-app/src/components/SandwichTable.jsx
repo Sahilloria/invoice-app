@@ -1,8 +1,11 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ReactPaginate from "react-paginate";
 import sandwichesData from '../data/sandwiches.json';
 import styled from 'styled-components';
-
+import axios from "axios";
+import { MdDelete } from "react-icons/md";
+import Modal from './Modal';
+import AddItemForm from './AddItemForm';
 const TableContainer = styled.div`
   margin: 20px 0;
   display: flex;
@@ -13,7 +16,6 @@ const TableContainer = styled.div`
 
 const SearchBar = styled.input`
   padding: 10px;
-  margin-bottom: 20px;
   width: 100%;
   max-width: 600px;
   box-sizing: border-box;
@@ -35,7 +37,7 @@ const Th = styled.th`
 `;
 
 const Td = styled.td`
-  padding: 10px;
+     padding: 6px 10px;
   border: 1px solid #ddd;
 
   .button{
@@ -74,15 +76,27 @@ const PaginationContainer = styled.div`
   }
 `;
 
-const SandwichTable = ({ selectedItems, setSelectedItems }) => {
+const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
   const [sandwiches, setSandwiches] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [showUpdateItemModal, setShowUpdateItemModal] = useState(false);
+  const [message, setMessage] = useState("");
 
   const ITEMS_PER_PAGE = sandwichesData.length;
 
+  const getSandwiches = async () => {
+    try {
+      const res = await axios.get(`${schema}/foodItems`)
+      setSandwiches(res.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
   useEffect(() => {
-    setSandwiches(sandwichesData);
+    getSandwiches()
   }, []);
 
   const handlePageClick = (event) => {
@@ -95,18 +109,18 @@ const SandwichTable = ({ selectedItems, setSelectedItems }) => {
   };
 
   const handleSelectItem = (item) => {
-    const alreadySelected = selectedItems.find((selectedItem) => selectedItem.id === item.id);
+    const alreadySelected = selectedItems.find((selectedItem) => selectedItem._id === item._id);
     if (!alreadySelected) {
-      setSelectedItems([...selectedItems, { ...item, sun:0, mon:0, tue:0, wed:0, thu:0,fri:0,sat:0, }]);
+      setSelectedItems([...selectedItems, { ...item, sun: 0, mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, }]);
     }
   };
   const handleRemoveItem = (item) => {
-    const removeItem = selectedItems.filter((value)=>value.id!==item.id);
+    const removeItem = selectedItems.filter((value) => value._id !== item._id);
     setSelectedItems(removeItem)
   };
 
   const filteredSandwiches = sandwiches.filter(sandwich =>
-    sandwich.name.toLowerCase().includes(searchTerm.toLowerCase())
+    sandwich.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const pageCount = Math.ceil(filteredSandwiches.length / ITEMS_PER_PAGE);
@@ -115,60 +129,190 @@ const SandwichTable = ({ selectedItems, setSelectedItems }) => {
     (currentPage + 1) * ITEMS_PER_PAGE
   );
 
+  const handleDeleteItem = async (id) => {
+    try {
+      const res = await axios.delete(`${schema}/deleteItem/${id}`);
+      setMessage(res.data.message)
+    } catch (error) {
+      console.log("Error", error)
+    }
+
+  };
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    price: "",
+    margin: ""
+  })
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setForm((pre) => ({
+      ...pre,
+      [name]: value
+    }))
+
+  };
+  const { id, name, description, price, margin } = form;
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${schema}/newItem`, { name, description, price, margin })
+      setMessage(res.data.message)
+    } catch (error) {
+      console.log("ERROR", error)
+    }
+  };
+
+  const handleUpdateItemForm = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put(`${schema}/updateItem`, { id, name, description, price, margin })
+      handleShowUpdateModal();
+      getSandwiches()
+      setForm((pre) => ({
+        ...pre,
+        name: "",
+        description: "",
+        price: "",
+        margin: ""
+
+      }));
+      setMessage(res.data.message)
+    } catch (error) {
+      console.log("ERROR", error)
+      setForm((pre) => ({
+        ...pre,
+        name: "",
+        description: "",
+        price: "",
+        margin: ""
+
+      }))
+    }
+  };
+
+
+  const handleShowModal = () => {
+    setShowModal(!showModal)
+    setForm((pre) => ({
+      ...pre,
+      name: "",
+      description: "",
+      price: "",
+      margin: ""
+
+    }))
+  };
+
+
+  const handleShowUpdateModal = () => {
+    setShowUpdateItemModal(!showUpdateItemModal)
+  };
+
+  const handleUdpateItem = (values) => {
+    setForm((pre) => ({
+      ...pre,
+      id: values._id,
+      name: values.name,
+      description: values.description,
+      margin: values.margin,
+      price: values.price
+
+    }))
+    handleShowUpdateModal()
+  }
   return (
-    <TableContainer>
-      <SearchBar
-        type="text"
-        placeholder="Search Items"
-        value={searchTerm}
-        onChange={handleSearch}
-      />
-      <Table>
-        <thead>
-          <tr>
-            <Th>Name</Th>
-            <Th>Price</Th>
-            <Th>Description</Th>
-            <Th>Select</Th>
-            <Th>Selected</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {displayedSandwiches.map((sandwich) => {
-            const isSelected = selectedItems.some(item => item.id === sandwich.id);
-            return (
-              <tr key={sandwich.id}>
-                <Td>{sandwich.name}</Td>
-                <Td>£ {sandwich.price}</Td>
-                <Td>{sandwich.description}</Td>
-               
-                <Td>
-                 { isSelected?
-                 <button onClick={() => handleRemoveItem(sandwich)} style={{background:"red"}}>Remove Item</button>
-                 :
-                  <button onClick={() => handleSelectItem(sandwich)}>Select Item</button>}
-                </Td>
-                <Td>{isSelected ? 'Yes' : 'No'}</Td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
-      <PaginationContainer>
-        <ReactPaginate
-  
-          previousLabel={'previous'}
-          nextLabel={'next'}
-          breakLabel={'...'}
-          pageCount={pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={'pagination'}
-          activeClassName={'active'}
+    <>
+      <TableContainer>
+        <div style={{ display: "flex", alignItems: 'center', width: "100%", justifyContent: "space-between", marginBottom: 20 }}>
+          <SearchBar
+            type="text"
+            placeholder="Search Items"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+          <button onClick={handleShowModal}> Add Item</button>
+        </div>
+
+        <Table>
+          <thead>
+            <tr>
+              <Th>Description</Th>
+              <Th>Price</Th>
+              <Th>Select</Th>
+              <Th>Update Item</Th>
+              <Th>Delete Item</Th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {displayedSandwiches.map((sandwich) => {
+              const isSelected = selectedItems.some(item => item.id === sandwich.id);
+              return (
+                <tr key={sandwich._id}>
+                  <Td>{sandwich.description} £{sandwich.price}</Td>
+                  <Td>£ {sandwich.price_after_margin}</Td>
+                  <Td>
+                    {isSelected ?
+                      <button onClick={() => handleRemoveItem(sandwich)} style={{ background: "red", }}>Remove Item</button>
+                      :
+                      <button onClick={() => handleSelectItem(sandwich)}>Select Item</button>}
+                  </Td>
+                  <Td onClick={() => handleUdpateItem(sandwich)}><button style={{ background: "#2297ff" }}>Update Item</button></Td>
+
+                  <Td onClick={() => handleDeleteItem(sandwich._id)} style={{ display: "flex", alignItems: "center", gap: 3 }}><MdDelete />Delete Item</Td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+        <PaginationContainer>
+          <ReactPaginate
+
+            previousLabel={'previous'}
+            nextLabel={'next'}
+            breakLabel={'...'}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+          />
+        </PaginationContainer>
+      </TableContainer>
+      {showModal &&
+        <Modal
+          Information={
+            <AddItemForm
+              handleShowModal={handleShowModal}
+              handleFormSubmit={handleFormSubmit}
+              handleOnChange={handleOnChange}
+              form={form}
+              title="Add New Item"
+
+            />
+          }
+
         />
-      </PaginationContainer>
-    </TableContainer>
+      }
+      {showUpdateItemModal &&
+        <Modal Information={
+          <AddItemForm
+            handleShowModal={handleShowUpdateModal}
+            handleFormSubmit={handleUpdateItemForm}
+            handleOnChange={handleOnChange}
+            form={form}
+            title="Update an Item"
+
+          />
+        }
+          title="Update Item"
+        />
+      }
+    </>
+
   );
 };
 
