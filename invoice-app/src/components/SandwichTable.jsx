@@ -86,20 +86,25 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
   const [showUpdateItemModal, setShowUpdateItemModal] = useState(false);
   const [message, setMessage] = useState("");
   const [color,setColor]=useState("none");
+  const [showMessage,setShowMessage] =useState(false);
+
   const ITEMS_PER_PAGE = sandwiches .length;
 
-  const getSandwiches = async () => {
-    try {
-      const res = await axios.get(`${schema}/foodItems`)
-      setSandwiches(res.data.data)
-    } catch (error) {
-      console.log(error)
-    }
-  };
+  const getMessage = () => {
+    const timeout = setTimeout(() => {
+      if (showMessage===true) {
+        setShowMessage(false);
+      }
+    }, 5000);
 
+    return () => {
+      clearTimeout(timeout);
+    };
+  };
   useEffect(() => {
-    getSandwiches()
-  }, []);
+   getMessage();
+   
+  }, [showMessage]);
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected);
@@ -116,6 +121,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
       setSelectedItems([...selectedItems, { ...item, sun: 0, mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, }]);
     }
   };
+
   const handleRemoveItem = (item) => {
     const removeItem = selectedItems.filter((value) => value._id !== item._id);
     setSelectedItems(removeItem)
@@ -148,6 +154,18 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
   };
   const { id, name, description, price, margin } = form;
 
+  const getSandwiches = async () => {
+    try {
+      const res = await axios.get(`${schema}/foodItems`)
+      setSandwiches(res.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  useEffect(() => {
+    getSandwiches()
+  }, []);
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -155,7 +173,8 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
       handleShowModal();
       getSandwiches();
       setColor("green")
-      setMessage(res.data.message)    
+      setMessage(res.data.message)   
+      setShowMessage(true) 
     } catch (error) {
       console.log("ERROR", error)
     }
@@ -165,7 +184,8 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
       const res = await axios.delete(`${schema}/deleteItem/${id}`);
       getSandwiches();
       setColor("red")
-      setMessage(res.data.message)
+      setMessage("Item Successfully deleted!")
+      setShowMessage(true)
     } catch (error) {
       console.log("Error", error)
     }
@@ -187,6 +207,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
 
       }));
       setMessage(res.data.message)
+      setShowMessage(true)
     } catch (error) {
       console.log("ERROR", error)
       setForm((pre) => ({
@@ -200,7 +221,6 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
     }
   };
 
-
   const handleShowModal = () => {
     setShowModal(!showModal)
     setForm((pre) => ({
@@ -212,7 +232,6 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
 
     }))
   };
-
 
   const handleShowUpdateModal = () => {
     setShowUpdateItemModal(!showUpdateItemModal)
@@ -229,7 +248,12 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
 
     }))
     handleShowUpdateModal()
-  }
+  };
+
+  // const handleSelectAll = () =>{
+  //   setSelectedItems({...displayedSandwiches,  sun: 0, mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 0, });
+  // };
+
   return (
     <>
       <TableContainer>
@@ -241,6 +265,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
             onChange={handleSearch}
           />
           <button onClick={handleShowModal} className='button'> Add Item</button>
+          {/* <button onClick={handleSelectAll} className='button'> Select All</button> */}
         </div>
 
         <Table>
@@ -256,7 +281,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
           </thead>
           <tbody>
             {displayedSandwiches.map((sandwich) => {
-              const isSelected = selectedItems.some(item => item.id === sandwich.id);
+              const isSelected = selectedItems.some(item => item._id === sandwich._id);
               return (
                 <tr key={sandwich._id}>
                   <Td>{sandwich.description} £{sandwich.price}</Td>
@@ -321,7 +346,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
           title="Update Item"
         />
       }
-      <Message message={message} color={color}/>
+     { showMessage && <Message message={message} color={color}/>}
     </>
 
   );

@@ -23,7 +23,6 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     doc.text(`Invoice Date: ${invoiceInfo.invoiceDate}`, 120, 15);
     const tableColumn = ["Description", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Total", "Price", "Amount"];
     const tableFoot= ["Total",`${footData[0]}   ${footData[1]}`, `${footData[2]}   ${footData[3]}`,`${footData[4]}   ${footData[5]}`,`${footData[6]}   ${footData[7]}`,`${footData[8]}   ${footData[9]}`,`${footData[10]}   ${footData[11]}`,`${footData[12]}   ${footData[13]}`,`${totalDeliver}  ${totalReturn}`,"",`${totalAmount.toFixed(2)}`];
-    console.log("TOTAL AMOUT", totalAmount)
     const tableRows = invoices.map(invoice => [
       invoice.description,
       `${invoice.sun === 0 ? "" : invoice.sun}       ${invoice.sunReturn ?? ""}`,
@@ -34,7 +33,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
       `${invoice.fri === 0 ? "" : invoice.fri}     ${invoice.friReturn ?? ""}`,
       `${invoice.sat === 0 ? "" : invoice.sat}    ${invoice.satReturn ?? ""}`,
       calculateTotal(invoice),
-      invoice.price,
+      invoice.price_after_margin,
       (calculateAmount(invoice)).toFixed(2),
     ]);
 
@@ -70,9 +69,6 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     doc.save(`${invoiceInfo.invoiceTo}${invoiceInfo.invoiceDate}.pdf`);
   };
 
-  // let totalDeliver =0;
-  // let totalReturn=0;
-  // let totalAmount=0;
   const calculateTotal = (invoice) => {
     totalReturn+=( parseInt(invoice?.sunReturn ?? 0)+
     parseInt(invoice?.monReturn ?? 0)+
@@ -119,8 +115,8 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     parseInt(invoice.thu) + parseInt(invoice?.thuReturn ?? 0) +
     parseInt(invoice.fri) + parseInt(invoice?.friReturn ?? 0) +
     parseInt(invoice.sat) + parseInt(invoice?.satReturn ?? 0));
-    totalAmount+= total* invoice.price
-    return total*invoice.price
+    totalAmount+= total* invoice.price_after_margin
+    return total*invoice.price_after_margin
   };
 
   
@@ -145,8 +141,8 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
         </thead>
         <tbody>
           {invoices.map((invoice, index) => (
-            <tr key={index} onClick={() => handleModal(invoice.id)}>
-              <td>{invoice.description}</td>
+            <tr key={index} onClick={() => handleModal(invoice._id)}>
+              <td>{invoice.description} £{invoice.price}</td>
               <td><span>{invoice.sun === 0 ? "" : invoice.sun} </span> <span style={{ float: "right" }}>{invoice.sunReturn ?? ""}</span></td>
               <td><span>{invoice.mon === 0 ? "" : invoice.mon}</span><span style={{ float: "right" }}>{invoice.monReturn ?? ""}</span></td>
               <td><span>{invoice.tue === 0 ? "" : invoice.tue}</span> <span style={{ float: "right" }}>{invoice.tueReturn ?? ""}</span></td>
@@ -155,7 +151,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
               <td><span>{invoice.fri === 0 ? "" : invoice.fri}</span> <span style={{ float: "right" }}>{invoice.friReturn ?? ""}</span></td>
               <td><span>{invoice.sat === 0 ? "" : invoice.sat}</span> <span style={{ float: "right" }}>{invoice.satReturn ?? ""}</span></td>
               <td>{calculateTotal(invoice)}</td>
-              <td>£ {invoice.price}</td>
+              <td>£ {invoice.price_after_margin}</td>
               <td>£ {(calculateAmount(invoice)).toFixed(2)}</td>
               {/* <td>{invoice.vat}</td> */}
             </tr>

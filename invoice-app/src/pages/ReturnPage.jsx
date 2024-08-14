@@ -49,12 +49,12 @@ const Return = () => {
     };
 
     const addInvoice = (invoice) => {
-        setInvoices(prevItems => prevItems.map(item => item.id === formData.id ? formData : item));
+        setInvoices(prevItems => prevItems.map(item => item._id === formData._id ? formData : item));
         setIsModal(false)
     };
 
     const handleRowClick = (id) => {
-        const item = invoices.find(item => item.id === id);
+        const item = invoices.find(item => item._id === id);
         if (item) {
           setFormData(item);
           setIsModal(true);

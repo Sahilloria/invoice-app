@@ -73,8 +73,7 @@
     }
   }
   
-  button:focus, button:hover,
-  button:focus-visible {
+  button:focus, button:hover {
     box-sizing: border-box;
     background-color: #298a1c;
     box-shadow: 2px 2px 27px 2px #cfcfcf;
