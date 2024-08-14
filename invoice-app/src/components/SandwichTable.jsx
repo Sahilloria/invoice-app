@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import ReactPaginate from "react-paginate";
-import sandwichesData from '../data/sandwiches.json';
 import styled from 'styled-components';
 import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import Modal from './Modal';
 import AddItemForm from './AddItemForm';
+import Message from './Message';
+
 const TableContainer = styled.div`
   margin: 20px 0;
   display: flex;
@@ -34,6 +35,7 @@ const Th = styled.th`
   background: #f4f4f4;
   padding: 10px;
   border: 1px solid #ddd;
+  font-size:1.2em;
 `;
 
 const Td = styled.td`
@@ -83,8 +85,8 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
   const [showModal, setShowModal] = useState(false);
   const [showUpdateItemModal, setShowUpdateItemModal] = useState(false);
   const [message, setMessage] = useState("");
-
-  const ITEMS_PER_PAGE = sandwichesData.length;
+  const [color,setColor]=useState("none");
+  const ITEMS_PER_PAGE = sandwiches .length;
 
   const getSandwiches = async () => {
     try {
@@ -129,15 +131,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
     (currentPage + 1) * ITEMS_PER_PAGE
   );
 
-  const handleDeleteItem = async (id) => {
-    try {
-      const res = await axios.delete(`${schema}/deleteItem/${id}`);
-      setMessage(res.data.message)
-    } catch (error) {
-      console.log("Error", error)
-    }
 
-  };
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -158,18 +152,32 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
     e.preventDefault();
     try {
       const res = await axios.post(`${schema}/newItem`, { name, description, price, margin })
-      setMessage(res.data.message)
+      handleShowModal();
+      getSandwiches();
+      setColor("green")
+      setMessage(res.data.message)    
     } catch (error) {
       console.log("ERROR", error)
     }
   };
+  const handleDeleteItem = async (id) => {
+    try {
+      const res = await axios.delete(`${schema}/deleteItem/${id}`);
+      getSandwiches();
+      setColor("red")
+      setMessage(res.data.message)
+    } catch (error) {
+      console.log("Error", error)
+    }
 
+  };
   const handleUpdateItemForm = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.put(`${schema}/updateItem`, { id, name, description, price, margin })
       handleShowUpdateModal();
       getSandwiches()
+      setColor("green")
       setForm((pre) => ({
         ...pre,
         name: "",
@@ -232,7 +240,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
             value={searchTerm}
             onChange={handleSearch}
           />
-          <button onClick={handleShowModal}> Add Item</button>
+          <button onClick={handleShowModal} className='button'> Add Item</button>
         </div>
 
         <Table>
@@ -255,13 +263,15 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
                   <Td>£ {sandwich.price_after_margin}</Td>
                   <Td>
                     {isSelected ?
-                      <button onClick={() => handleRemoveItem(sandwich)} style={{ background: "red", }}>Remove Item</button>
+                      <button className='button' onClick={() => handleRemoveItem(sandwich)} style={{ background: "red", }}>Remove Item</button>
                       :
-                      <button onClick={() => handleSelectItem(sandwich)}>Select Item</button>}
+                      <button className='button' onClick={() => handleSelectItem(sandwich)}>Select Item</button>}
                   </Td>
-                  <Td onClick={() => handleUdpateItem(sandwich)}><button style={{ background: "#2297ff" }}>Update Item</button></Td>
+                  <Td onClick={() => handleUdpateItem(sandwich)}><button className='update-button'>Update Item</button></Td>
 
-                  <Td onClick={() => handleDeleteItem(sandwich._id)} style={{ display: "flex", alignItems: "center", gap: 3 }}><MdDelete />Delete Item</Td>
+                  <Td onClick={() => handleDeleteItem(sandwich._id)} >
+                    <button className='delete-button' ><MdDelete />Delete Item</button>
+                  </Td>
                 </tr>
               );
             })}
@@ -311,6 +321,7 @@ const SandwichTable = ({ selectedItems, setSelectedItems, schema }) => {
           title="Update Item"
         />
       }
+      <Message message={message} color={color}/>
     </>
 
   );
