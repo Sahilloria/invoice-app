@@ -29,13 +29,21 @@
     min-height: 100vh;
     background-color: #7479c9;
   }
-  
+  .message{
+    position: fixed;
+    top: 8%;
+    padding: 6px 12px;
+    color: white;
+    border-radius: 8px;
+    box-sizing: border-box;
+    box-shadow: 2px 2px 53px 17px #dbdbdb;
+  }
   h1 {
     font-size: 3.2em;
     line-height: 1.1;
   }
   
-  button {
+  .button,.delete-button, .update-button {
     border-radius: 8px;
     border: 1px solid transparent;
     color: #ffffff;
@@ -48,9 +56,27 @@
     outline: none;
     transition: border-color 0.25s;
   }
-  button:focus,
-  button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+  .update-button{
+    background-color: #2297ff;
+
+    &:hover{
+      background-color: #005fb3;
+    }
+  }
+  .delete-button {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background-color: rgb(239, 43, 43);
+    &:hover{
+      background-color: rgb(197, 0, 0);
+    }
+  }
+  
+  button:focus, button:hover {
+    box-sizing: border-box;
+    background-color: #298a1c;
+    box-shadow: 2px 2px 27px 2px #cfcfcf;
   }
   
   @media (prefers-color-scheme: light) {

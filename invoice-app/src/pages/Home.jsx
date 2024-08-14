@@ -30,7 +30,7 @@ const Button = styled.button`
   }
 `;
 
-const HomePage = () => {
+const HomePage = ({schema}) => {
   const [selectedItems, setSelectedItems] = useState([]); // Ensure this is an array
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ const HomePage = () => {
   return (
     <Container>
       <Title>GAGGS FOODS</Title>
-      <SandwichTable selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
+      <SandwichTable selectedItems={selectedItems} setSelectedItems={setSelectedItems} schema={schema} />
       <Button onClick={handleReturn}>Return</Button>
     </Container>
   );

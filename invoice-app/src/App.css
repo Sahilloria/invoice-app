@@ -3,7 +3,8 @@
   font-family: Arial, sans-serif;
 }
 
-.header, .footer {
+.header,
+.footer {
   color: azure;
   margin-bottom: 20px;
 }
@@ -28,21 +29,25 @@ table {
   border-collapse: collapse;
   margin-bottom: 20px;
   background: #f8f8f8;
-margin-top: 8px;
+  margin-top: 8px;
 }
 
-table, th, td {
+table,
+th,
+td {
   border: 1px solid black;
 }
 
-th, td {
+th,
+td {
   padding: 8px;
   text-align: left;
 }
 
-tr:hover{
+tr:hover {
   cursor: pointer;
 }
+
 .invoice-form {
   display: flex;
   gap: 10px;
@@ -53,10 +58,10 @@ tr:hover{
   padding: 5px;
   flex: 1;
   border-radius: 8px;
-    /* outline: #d68f2f; */
-    line-height: 27px;
-    border: none;
-    margin-top: 10px;
+  /* outline: #d68f2f; */
+  line-height: 27px;
+  border: none;
+  margin-top: 10px;
 }
 
 .invoice-form button {
@@ -74,15 +79,18 @@ tr:hover{
 .generate-pdf-button:hover {
   background-color: #45a049;
 }
+
 .app {
   padding: 20px;
 }
 
-.header-form, .invoice-form {
+.header-form,
+.invoice-form {
   margin-bottom: 20px;
 }
 
-.header-form input, .invoice-form input {
+.header-form input,
+.invoice-form input {
   margin-right: 10px;
   padding: 5px;
 }
@@ -99,6 +107,7 @@ tr:hover{
 .generate-pdf-button:hover {
   background-color: #45a049;
 }
+
 /* Modal Container */
 /* Modal Container */
 /* Modal Container */
@@ -115,13 +124,25 @@ tr:hover{
   z-index: 1000;
 }
 
+.form-section {
+  padding: 16px 32px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 15px;
+
+}
+
+
 /* Modal Content */
 .modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 400px; /* You can adjust the width as needed */
+  width: 400px;
+  /* You can adjust the width as needed */
   max-width: 100%;
 }
 
@@ -147,7 +168,8 @@ tr:hover{
   margin-bottom: 5px;
 }
 
-.modal-content input {
+.modal-content input,
+.form-input {
   padding: 6px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -164,7 +186,15 @@ tr:hover{
   cursor: pointer;
 }
 
+.form-container {
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  position: relative;
+}
+
 .modal-content button:hover {
   background-color: #45a049;
 }
-

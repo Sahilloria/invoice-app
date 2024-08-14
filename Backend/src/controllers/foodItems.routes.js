@@ -18,17 +18,21 @@ export const foodItems = AsyncHandler(async (req, res) => {
 
 export const addFoodItem = AsyncHandler(async (req, res) => {
     try {
-        const { name, description, price } = req.body;
+        const { name, description, price, margin } = req.body;
 
-        if (name === "" || description === "" || price === "") {
+        if (name === "" || description === "" || price === "" || margin === "") {
             throw ApiError(404, "Name or description or price is missing")
         };
+        const priceAfterMargin = parseInt(price)-((parseInt(margin) / 100) * parseInt(price))
 
         const addItem = await foodItemsModals.create({
             name: name,
             description: description,
-            price: price
-        })
+            price: price,
+            price_after_margin:  priceAfterMargin,
+            margin:margin
+        });
+
         return res.json(ApiResponse(200, addItem, "Item Successfully Added"))
 
 
@@ -43,13 +47,14 @@ export const addFoodItem = AsyncHandler(async (req, res) => {
 
 export const updateFoodItem = AsyncHandler(async (req, res) => {
     try {
-        const { id, name, price, description } = req.body;
-        
+        const { id, name, price, description, margin } = req.body;
+
         const itemExist = await foodItemsModals.findById(id);
         if (!itemExist) {
             throw ApiError(401, "Item with this id does not exist")
         };
-
+        const priceAfterMargin = Number(price)-((Number(margin) / 100) * Number(price));
+      
         await foodItemsModals.findOneAndUpdate(
             { _id: id },
 
@@ -57,11 +62,13 @@ export const updateFoodItem = AsyncHandler(async (req, res) => {
                 $set: {
                     name: name,
                     price: price,
-                    description: description
+                    description: description,
+                    margin:margin,
+                    price_after_margin:  priceAfterMargin.toFixed(2),
                 }
             });
         return res.status(201).json(
-            ApiResponse(200, { id, name, price, description }, "Item Successfully updated")
+            ApiResponse(200, { id, name, price, description, margin}, "Item Successfully updated")
         )
     } catch (error) {
         return res.status(400).json(ApiError(400, `Some error in updating item: ${error}`))
@@ -70,8 +77,9 @@ export const updateFoodItem = AsyncHandler(async (req, res) => {
 });
 
 export const deleteItem = AsyncHandler(async (req, res) => {
+  
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const itemExist = await foodItemsModals.findById(id)
         if (!itemExist) {
             throw ApiError(401, "Item with this id does not exist")
