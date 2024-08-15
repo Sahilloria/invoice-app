@@ -24,7 +24,7 @@ const InvoiceTable = ({ invoices, isModal, handleModal, addInvoice, invoiceInfo,
     const tableColumn = ["Description", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Total", "Price", "Amount"];
     const tableFoot= ["Total",`${footData[0]}   ${footData[1]}`, `${footData[2]}   ${footData[3]}`,`${footData[4]}   ${footData[5]}`,`${footData[6]}   ${footData[7]}`,`${footData[8]}   ${footData[9]}`,`${footData[10]}   ${footData[11]}`,`${footData[12]}   ${footData[13]}`,`${totalDeliver}  ${totalReturn}`,"",`${totalAmount.toFixed(2)}`];
     const tableRows = invoices.map(invoice => [
-      invoice.description,
+      `${invoice.description} £${invoice.price}`,
       `${invoice.sun === 0 ? "" : invoice.sun}       ${invoice.sunReturn ?? ""}`,
       `${invoice.mon === 0 ? "" : invoice.mon}        ${invoice.monReturn ?? ""}  `,
       `${invoice.tue === 0 ? "" : invoice.tue}         ${invoice.tueReturn ?? ""}`,
